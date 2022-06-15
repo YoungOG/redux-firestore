@@ -528,14 +528,19 @@ export function dataByIdSnapshot(snap) {
     if (snapData) {
       snapshotCache.set(snapData, snap);
     }
+    console.log(`List?(${snap.id}): `, snapData);
     data[snap.id] = snapData;
   } else if (snap.forEach) {
     snap.forEach(doc => {
       const snapData = doc.data() || doc;
       snapshotCache.set(snapData, doc);
+      console.log(`List?(${doc.id}): `, snapData);
       data[doc.id] = snapData;
     });
   }
+
+  console.log("dataByID: ", data);
+
   if (!!data && Object.keys(data).length) {
     snapshotCache.set(data, snap);
     return data;
