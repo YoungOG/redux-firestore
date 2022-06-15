@@ -14,8 +14,7 @@ const config = {
     filename: libraryName + (isProduction ? '.min.js' : '.js'),
     library: 'ReduxFirestore',
     libraryTarget: 'umd',
-    umdNamedDefine: true,
-    hashFunction: "xxhash64"
+    umdNamedDefine: true
   },
   externals: [],
   optimization: {
