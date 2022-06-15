@@ -573,16 +573,17 @@ export function populateList(firebase, originalObj, p, results) {
     set(results, p.root, {});
   }
   return Promise.all(
-    map(originalObj, (id, childKey) => {
+    map(originalObj, async (id, childKey) => {
       // handle list of keys
       const populateKey = parseId(id === true || p.populateByKey ? childKey : id);
-      return getPopulateChild(firebase, p, populateKey).then(pc => {
-        if (pc) {
-          // write child to result object under root name if it is found
-          return set(results, `${p.root}.${populateKey}`, pc);
-        }
-        return results;
-      });
+      const pc = await getPopulateChild(firebase, p, populateKey);
+      if (pc) {
+        // write child to result object under root name if it is found
+        console.log("PopulatedChild: " + p.root + "." + populateKey, pc);
+
+        return set(results, `${p.root}.${populateKey}`, pc);
+      }
+      return results;
     }),
   );
 }
@@ -691,6 +692,8 @@ export function promisesForPopulate(
         }
 
         const id = parseId(idOrList);
+
+        console.log("ID: " + id);
 
         // Parameter of each list item is single ID
         if (id) {
