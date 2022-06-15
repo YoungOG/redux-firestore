@@ -698,7 +698,7 @@ export function promisesForPopulate(
 
         const id = parseId(idOrList);
 
-        console.log("ID: " + id);
+        console.log("ID: " + id, idOrList, d, p);
 
         // Parameter of each list item is single ID
         if (id) {
