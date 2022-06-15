@@ -656,9 +656,12 @@ export function promisesForPopulate(
       const childDataVal = get(originalData, p.child);
       const id = parseId(childDataVal);
 
+      console.log("ID: " + id, childDataVal, originalData, p);
+
       if (id) {
         return promisesArray.push(
           getPopulateChild(firebase, p, id).then(v => {
+            console.log("VALUE: ", v);
             // write child to result object under root name if it is found
             if (v) {
               set(
