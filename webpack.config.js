@@ -15,6 +15,7 @@ const config = {
     library: 'ReduxFirestore',
     libraryTarget: 'umd',
     umdNamedDefine: true,
+    hashFunction: "xxhash64"
   },
   externals: [],
   optimization: {
