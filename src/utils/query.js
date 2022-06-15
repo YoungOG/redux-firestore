@@ -582,6 +582,8 @@ export function populateList(firebase, originalObj, p, results) {
       // handle list of keys
       const populateKey = parseId(id === true || p.populateByKey ? childKey : id);
       const pc = await getPopulateChild(firebase, p, populateKey);
+      console.log(`populateList(${childKey}):`, originalObj, p, results);
+      
       if (pc) {
         // write child to result object under root name if it is found
         console.log("PopulatedChild: " + p.root + "." + populateKey, pc);
