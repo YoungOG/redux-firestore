@@ -585,7 +585,7 @@ export function getPopulateChild(firebase, populate, id) {
     .get()
     .then(snap => {
       console.log("getPopulatedChildSnapshot: ", snap);
-      return ({ id, ...(typeof snap.val === "function" ? snap.val() : typeof snap.data ? snap.data() : null) });
+      return ({ id, ...(typeof snap.val === "function" ? snap.val() : typeof snap.data === "function" ? snap.data() : null) });
     });
 }
 
