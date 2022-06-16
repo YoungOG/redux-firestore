@@ -580,12 +580,12 @@ export function dataByIdSnapshot(snap) {
  */
 export function getPopulateChild(firebase, populate, id) {
   console.log("getPopulatedChildSnapshot: ", populate, id);
-  
+
   return firestoreRef(firebase, { collection: populate.root, doc: id })
     .get()
     .then(snap => {
       console.log("getPopulatedChildSnapshot: ", snap);
-      return ({ id, ...snap.val() });
+      return ({ id, ...(typeof snap.val === "function" ? snap.val() : typeof snap.data ? snap.data() : null) });
     });
 }
 
@@ -608,7 +608,7 @@ export function populateList(firebase, originalObj, p, results) {
       // handle list of keys
       const populateKey = parseId(id === true || p.populateByKey ? childKey : id);
       const pc = await getPopulateChild(firebase, p, populateKey);
-      console.log(`populateList(${childKey}):`, originalObj, p, results);
+      console.log(`populateList(${id + "-" + childKey}):`, p, originalObj, pc, results);
 
       if (pc) {
         // write child to result object under root name if it is found
