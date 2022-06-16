@@ -613,11 +613,11 @@ export function populateList(firebase, originalObj, p, results) {
           return results;
 
         const pc = await getPopulateChild(firebase, p, populateKey);
-        console.log(`populateList1(${id + "-" + childKey}):`, p, originalObj, pc, results);
+        console.log(`populateList1(${populateKey}):`, p, originalObj, pc, results);
 
         if (pc) {
           // write child to result object under root name if it is found
-          console.log("PopulatedChild1: " + p.root + "." + populateKey, originalObj, p, pc, results, id, childKey);
+          console.log("PopulatedChild1: " + p.root + "." + populateKey, originalObj, p, pc, results,);
 
           return set(results, `${p.root}.${populateKey}`, pc);
         }
