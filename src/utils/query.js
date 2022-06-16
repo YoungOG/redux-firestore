@@ -499,27 +499,27 @@ export function orderedFromSnap(snap) {
 
   console.log("SNAPSHOT: ", snap);
 
-  if (snap.data && snap.exists) {
-    const obj = isObject(snap.data()) ?
+  if (snap.exists()) {
+    const obj = isObject(snap.val()) ?
       {
         id: snap.id,
-        ...(snap.data() || snap.data)
+        ...snap.val()
       } : {
         id: snap.id,
-        data: snap.data()
+        data: snap.val()
       };
 
     snapshotCache.set(obj, snap);
     ordered.push(obj);
   } else if (snap.forEach) {
     snap.forEach(doc => {
-      const obj = isObject(doc.data()) ?
+      const obj = isObject(doc.val()) ?
         {
           id: doc.id,
-          ...(doc.data() || doc.data)
+          ...doc.val()
         } : {
           id: doc.id,
-          data: doc.data()
+          data: doc.val()
         };
 
       snapshotCache.set(obj, doc);
@@ -539,8 +539,8 @@ export function orderedFromSnap(snap) {
  */
 export function dataByIdSnapshot(snap) {
   const data = {};
-  if (snap.data) {
-    const snapData = snap.exists ? snap.data() : null;
+  if (snap.val()) {
+    const snapData = snap.exists() ? snap.val() : null;
     if (snapData) {
       snapshotCache.set(snapData, snap);
     }
@@ -548,7 +548,7 @@ export function dataByIdSnapshot(snap) {
     data[snap.id] = snapData;
   } else if (snap.forEach) {
     snap.forEach(doc => {
-      const snapData = doc.data() || doc;
+      const snapData = doc.val() || doc;
       snapshotCache.set(snapData, doc);
       console.log(`List?(${doc.id}): `, snapData);
       data[doc.id] = snapData;
@@ -576,7 +576,7 @@ export function dataByIdSnapshot(snap) {
 export function getPopulateChild(firebase, populate, id) {
   return firestoreRef(firebase, { collection: populate.root, doc: id })
     .get()
-    .then(snap => ({ id, ...snap.data() }));
+    .then(snap => ({ id, ...snap.val() }));
 }
 
 /**
@@ -779,7 +779,7 @@ function docChangeEvent(change, originalMeta = {}) {
     type: changeTypeToEventType[change.type] || actionTypes.DOCUMENT_MODIFIED,
     meta,
     payload: {
-      data: change.doc.data(),
+      data: change.doc.val(),
       ordered: { oldIndex: change.oldIndex, newIndex: change.newIndex },
     },
   };
