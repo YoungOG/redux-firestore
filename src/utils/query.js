@@ -579,6 +579,8 @@ export function dataByIdSnapshot(snap) {
  * @returns {Promise} Resolves with populate child data
  */
 export function getPopulateChild(firebase, populate, id) {
+  console.log("getPopulatedChildSnapshot: ", populate, id);
+  
   return firestoreRef(firebase, { collection: populate.root, doc: id })
     .get()
     .then(snap => {
