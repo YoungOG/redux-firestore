@@ -497,7 +497,7 @@ export function getQueryConfigs(queries) {
 export function orderedFromSnap(snap) {
   const ordered = [];
 
-  console.log("SNAPSHOT: ", snap);
+  console.log("SNAPSHOT(ORDERED): ", snap);
 
   if (snap.exists()) {
     const obj = isObject(snap.val()) ?
@@ -539,8 +539,11 @@ export function orderedFromSnap(snap) {
  */
 export function dataByIdSnapshot(snap) {
   const data = {};
-  if (snap.val()) {
-    const snapData = snap.exists() ? snap.val() : null;
+  console.log("SNAPSHOT(byId): ", snap);
+
+
+  if (snap.exists()) {
+    const snapData = snap.val() ? snap.val() : null;
     if (snapData) {
       snapshotCache.set(snapData, snap);
     }
