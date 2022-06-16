@@ -496,21 +496,36 @@ export function getQueryConfigs(queries) {
  */
 export function orderedFromSnap(snap) {
   const ordered = [];
+
   if (snap.data && snap.exists) {
-    const obj = isObject(snap.data())
-      ? { id: snap.id, ...(snap.data() || snap.data) }
-      : { id: snap.id, data: snap.data() };
+    console.log("SNAPSHOT: ", snap, snap.data());
+    const obj = isObject(snap.data()) ?
+      {
+        id: snap.id,
+        ...(snap.data() || snap.data)
+      } : {
+        id: snap.id,
+        data: snap.data()
+      };
+
     snapshotCache.set(obj, snap);
     ordered.push(obj);
   } else if (snap.forEach) {
     snap.forEach(doc => {
-      const obj = isObject(doc.data())
-        ? { id: doc.id, ...(doc.data() || doc.data) }
-        : { id: doc.id, data: doc.data() };
+      const obj = isObject(doc.data()) ?
+        {
+          id: doc.id,
+          ...(doc.data() || doc.data)
+        } : {
+          id: doc.id,
+          data: doc.data()
+        };
+
       snapshotCache.set(obj, doc);
       ordered.push(obj);
     });
   }
+
   snapshotCache.set(ordered, snap);
   return ordered;
 }
@@ -583,7 +598,7 @@ export function populateList(firebase, originalObj, p, results) {
       const populateKey = parseId(id === true || p.populateByKey ? childKey : id);
       const pc = await getPopulateChild(firebase, p, populateKey);
       console.log(`populateList(${childKey}):`, originalObj, p, results);
-      
+
       if (pc) {
         // write child to result object under root name if it is found
         console.log("PopulatedChild: " + p.root + "." + populateKey, originalObj, p, pc, results, id, childKey);
