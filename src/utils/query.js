@@ -541,7 +541,6 @@ export function dataByIdSnapshot(snap) {
   const data = {};
   console.log("SNAPSHOT(byId): ", snap);
 
-
   if (snap.exists()) {
     const snapData = snap.val() ? snap.val() : null;
     if (snapData) {
