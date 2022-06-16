@@ -528,7 +528,7 @@ export function dataByIdSnapshot(snap) {
     if (snapData) {
       snapshotCache.set(snapData, snap);
     }
-    console.log(`List?(${snap.id}): `, snapData);
+    console.log(`Single?(${snap.id}): `, snapData);
     data[snap.id] = snapData;
   } else if (snap.forEach) {
     snap.forEach(doc => {
@@ -586,7 +586,7 @@ export function populateList(firebase, originalObj, p, results) {
       
       if (pc) {
         // write child to result object under root name if it is found
-        console.log("PopulatedChild: " + p.root + "." + populateKey, pc);
+        console.log("PopulatedChild: " + p.root + "." + populateKey, originalObj, p, pc, results, id, childKey);
 
         return set(results, `${p.root}.${populateKey}`, pc);
       }
