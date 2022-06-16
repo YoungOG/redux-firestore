@@ -497,8 +497,9 @@ export function getQueryConfigs(queries) {
 export function orderedFromSnap(snap) {
   const ordered = [];
 
+  console.log("SNAPSHOT: ", snap);
+
   if (snap.data && snap.exists) {
-    console.log("SNAPSHOT: ", snap, snap.data());
     const obj = isObject(snap.data()) ?
       {
         id: snap.id,
