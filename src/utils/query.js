@@ -542,10 +542,9 @@ export function orderedFromSnap(snap) {
 export function dataByIdSnapshot(snap) {
   const data = {};
 
-  console.log("SNAPSHOT(byId-EMPTY): ", snap);
-
-  if (snap.empty()) {
-    const snapData = snap.val() ? snap.val() : null;
+  if (snap.empty) {
+    console.log("SNAPSHOT(byId-EMPTY)-SINGLE: ", snap);
+    const snapData = snap.data() ? snap.data() : null;
     if (snapData) {
       snapshotCache.set(snapData, snap);
     }
@@ -553,7 +552,8 @@ export function dataByIdSnapshot(snap) {
     data[snap.id] = snapData;
   } else if (snap.forEach) {
     snap.forEach(doc => {
-      const snapData = doc.val() || doc;
+      console.log("SNAPSHOT(byId-FOREACH)-LIST: ", snap);
+      const snapData = doc.data() || doc;
       snapshotCache.set(snapData, doc);
       console.log(`List?(${doc.id}): `, snapData);
       data[doc.id] = snapData;
