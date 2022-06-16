@@ -604,20 +604,49 @@ export function populateList(firebase, originalObj, p, results) {
     set(results, p.root, {});
   }
   return Promise.all(
-    map(originalObj, async (id, childKey) => {
-      // handle list of keys
-      const populateKey = parseId(id === true || p.populateByKey ? childKey : id);
-      const pc = await getPopulateChild(firebase, p, populateKey);
-      console.log(`populateList(${id + "-" + childKey}):`, p, originalObj, pc, results);
+    Array.isArray(originalObj)
+      ?
+      originalObj.map(async x => {
+        let populateKey = parseId(x);
 
-      if (pc) {
-        // write child to result object under root name if it is found
-        console.log("PopulatedChild: " + p.root + "." + populateKey, originalObj, p, pc, results, id, childKey);
+        if (!populateKey)
+          return results;
 
-        return set(results, `${p.root}.${populateKey}`, pc);
-      }
-      return results;
-    }),
+        const pc = await getPopulateChild(firebase, p, populateKey);
+        console.log(`populateList1(${id + "-" + childKey}):`, p, originalObj, pc, results);
+
+        if (pc) {
+          // write child to result object under root name if it is found
+          console.log("PopulatedChild1: " + p.root + "." + populateKey, originalObj, p, pc, results, id, childKey);
+
+          return set(results, `${p.root}.${populateKey}`, pc);
+        }
+
+        return results;
+      })
+      :
+      map(originalObj, async (id, childKey) => {
+        // handle list of keys
+        let populateKey = parseId(id);
+
+        if (!populateKey && p.populateByKey)
+          populateKey = parseId(childKey);
+
+        if (!populateKey)
+          return results;
+
+        const pc = await getPopulateChild(firebase, p, populateKey);
+        console.log(`populateList2(${id + "-" + childKey}):`, p, originalObj, pc, results);
+
+        if (pc) {
+          // write child to result object under root name if it is found
+          console.log("PopulatedChild2: " + p.root + "." + populateKey, originalObj, p, pc, results, id, childKey);
+
+          return set(results, `${p.root}.${populateKey}`, pc);
+        }
+
+        return results;
+      }),
   );
 }
 
