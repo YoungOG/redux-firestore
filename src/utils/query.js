@@ -497,9 +497,9 @@ export function getQueryConfigs(queries) {
 export function orderedFromSnap(snap) {
   const ordered = [];
 
-  console.log("SNAPSHOT(ORDERED): ", snap);
+  if (snap.empty) {
+    console.log("SNAPSHOT(ORDERED-EMPTY): ", snap);
 
-  if (snap.exists()) {
     const obj = isObject(snap.val()) ?
       {
         id: snap.id,
@@ -512,14 +512,16 @@ export function orderedFromSnap(snap) {
     snapshotCache.set(obj, snap);
     ordered.push(obj);
   } else if (snap.forEach) {
+    console.log("SNAPSHOT(ORDERED-FOREACH): ", snap);
+
     snap.forEach(doc => {
-      const obj = isObject(doc.val()) ?
+      const obj = isObject(doc.data()) ?
         {
           id: doc.id,
-          ...doc.val()
+          ...doc.data()
         } : {
           id: doc.id,
-          data: doc.val()
+          data: doc.data()
         };
 
       snapshotCache.set(obj, doc);
@@ -539,9 +541,10 @@ export function orderedFromSnap(snap) {
  */
 export function dataByIdSnapshot(snap) {
   const data = {};
-  console.log("SNAPSHOT(byId): ", snap);
 
-  if (snap.exists()) {
+  console.log("SNAPSHOT(byId-EMPTY): ", snap);
+
+  if (snap.empty()) {
     const snapData = snap.val() ? snap.val() : null;
     if (snapData) {
       snapshotCache.set(snapData, snap);
@@ -578,7 +581,10 @@ export function dataByIdSnapshot(snap) {
 export function getPopulateChild(firebase, populate, id) {
   return firestoreRef(firebase, { collection: populate.root, doc: id })
     .get()
-    .then(snap => ({ id, ...snap.val() }));
+    .then(snap => {
+      console.log("getPopulatedChildSnapshot: ", snap);
+      return ({ id, ...snap.val() });
+    });
 }
 
 /**
